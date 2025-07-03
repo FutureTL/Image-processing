@@ -37,3 +37,24 @@ command:      npm i -D nodemon
         git add .   (to add all the new files created)
         git commit -m "setup project files part-1"
         git push
+
+- Now, ideally what will happen is that user will give image as an input => that input will be stored in our local directory => then all the processing will be performed on it.
+
+- But for now, the main focus will be to implement the image processing logic first. For that I will be using downloaded images => once that is successfully performed, I will write the logic for taking image from the user.
+
+- The downloaded images will be kept in ./public/temp 
+- Now we start working with sharp lib. to install it run :
+command:    npm i sharp
+
+- Our first aim : Extract the metadata of the image. Metadata contains information like- width, height.
+- Lets dive input what is the structure of the input image:
+        Header(type of image- jpeg, png, webP etc)
+          |
+        metadata(width, height, size )
+          |
+        actual encoded compressed image
+          |
+        optional chunk/info
+
+- As metadat is not contained inside the actual compressed image , but present outside, it can be accessed very easily by the parser and hence sharp is very fast and optimized in extracting metadata of the image.
+- so using sharp we can extract metadata without decoding the compressed images.
