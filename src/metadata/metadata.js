@@ -1,6 +1,6 @@
 import sharp from "sharp";
 //in this file we are extracting the metadata from the image.
-//So whereever that data is required we can import this function.
+//So wherever that data is required we can import this function.
 
 async function getMetadata(imageLocation){
 
