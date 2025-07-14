@@ -58,3 +58,12 @@ command:    npm i sharp
 
 - As metadat is not contained inside the actual compressed image , but present outside, it can be accessed very easily by the parser and hence sharp is very fast and optimized in extracting metadata of the image.
 - so using sharp we can extract metadata without decoding the compressed images.
+
+- All changes and additions I need to make as of now:
+- In compression project I have to add .toFile() and specify the destination where the image has to be stored.
+
+-The next step is cropping an image- I will record how I go about it here in entirity.
+
+- Rotate, blur, crop, and adding the grayscale where relatively easier tasks. So I wont be discussing about them. 
+
+- lets move on to adding text to an image. Now sharp doesn't have a native way of adding text to an iamage, so we will create an image of the text using SVG and then using the concept of image composition.
