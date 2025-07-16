@@ -62,8 +62,26 @@ command:    npm i sharp
 - All changes and additions I need to make as of now:
 - In compression project I have to add .toFile() and specify the destination where the image has to be stored.
 
--The next step is cropping an image- I will record how I go about it here in entirity.
+- The next step is cropping an image- I will record how I go about it here in entirity.
 
 - Rotate, blur, crop, and adding the grayscale where relatively easier tasks. So I wont be discussing about them. 
 
 - lets move on to adding text to an image. Now sharp doesn't have a native way of adding text to an iamage, so we will create an image of the text using SVG and then using the concept of image composition.
+
+-                  PART TWO
+- Now that we are done with the transformations we want to apply on the image, we move on to writing our controllers, routes, middlewares and utils, and more.
+
+- First now I begin with writing multer as a middleware that will help us in accepting file uploads like images, videos, pdf files etc. Here we are dealing with only images at the moment.
+
+- Now install a bunch of dependencies with :
+                npm i cors multer express dotenv
+
+- first lets work on image upload using multer.
+
+- multer acts as a middleware. 
+- So while working on the backend of a project using express, we mainly have two things- request and response.
+
+- multer adds a body object and a file or files object to the request object. Through the body object we can have access of all the text values. 
+- Using the file/files i.e, req.file we can have access to file like images, video, some pdf.
+
+- It is so powerful that it allows to dynamically declare different paths for different file types, using the callback function.
