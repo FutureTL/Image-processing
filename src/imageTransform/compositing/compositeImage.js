@@ -17,7 +17,7 @@ const compositeImages = async (bottomImage, topImage, top, left) => {
                 left:left
             },
         ])
-        .toFile(outputCompositeImage)
+        .toFile('./public/processed')
         
     }catch (error) {
         console.log("error occured while compositing the image: ", error);

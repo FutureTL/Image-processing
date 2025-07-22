@@ -6,7 +6,7 @@ const covertToPng = async (originalPath) => {
         
         await sharp(originalPath)
                 .png()
-                .toFile(processedPath)
+                .toFile('./public/processed')
 
 
     } catch (error) {

@@ -15,3 +15,4 @@ const asyncHandler = (func) => {
      }
 }
 
+export default asyncHandler;

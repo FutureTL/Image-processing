@@ -9,7 +9,7 @@ const covertToWebP = async (originalPath) => {
                     quality:85,
                     nearLossless:true
                 })
-                .toFile(processedPath)
+                .toFile('./public/processed')
 
 
     } catch (error) {

@@ -47,7 +47,7 @@ const addText = async (boxWidth, boxHeight, textInput, textSize, textFont, textR
         // we have taken x, y as 50% as default right now, we have to see to it what it should be.
 
         const svgBuffer = Buffer.from(svgImage);
-        const image = await sharp(svgBuffer).toFile(outputImage);
+        const image = await sharp(svgBuffer).toFile('./public/processed');
 
     } catch (error) {
         console.log("Error in adding text to the image: ", error);

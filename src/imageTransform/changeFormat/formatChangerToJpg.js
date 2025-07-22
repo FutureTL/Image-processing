@@ -15,7 +15,7 @@ const covertToJpeg = async (originalPath) => {
                     progressive: true,
                     mozjpeg:true
                   })
-                  .toFile(processedPath)
+                  .toFile('./public/processed')
 
     }catch (error) {
         console.log("Error while changing to jpeg: ", error);

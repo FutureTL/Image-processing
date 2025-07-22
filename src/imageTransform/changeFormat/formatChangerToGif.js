@@ -6,7 +6,7 @@ const covertToGif = async (originalPath) => {
         
         await sharp(originalPath)
                 .gif()
-                .toFile(processedPath)
+                .toFile('./public/processed')
 
 
     } catch (error) {

@@ -85,3 +85,6 @@ command:    npm i sharp
 - Using the file/files i.e, req.file we can have access to file like images, video, some pdf.
 
 - It is so powerful that it allows to dynamically declare different paths for different file types, using the callback function.
+
+-                      UTILS
+- I have declared 3 utilis. 
