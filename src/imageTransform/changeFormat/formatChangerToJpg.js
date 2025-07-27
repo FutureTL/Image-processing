@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import path from "path";
 
 //in this, conversion to jpeg takes place.
 

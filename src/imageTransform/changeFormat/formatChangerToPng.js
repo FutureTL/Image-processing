@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import path from "path";
 
 const covertToPng = async (originalPath) => {
 

@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import path from "path";
 
 //here the user will give some text, in my mind the parameters that should be considered are:
 //- font of the text, height of the text, is it italic, bold, all these will depend on the options I give to the user. So, I'll decide that while writing the code of the frontend 

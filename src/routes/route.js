@@ -3,7 +3,7 @@
 
 import express from "express";
 import upload from "../middlewares/multer.js";
-import { getBlurImage } from "../controllers/controller.js";
+import { getBlurImage,getCompressedImage , getGreyScaleImage, getImageFormatChanged, getCompositeImages} from "../controllers/controller.js";
 
 const router = express.Router()
 
@@ -14,8 +14,38 @@ router.route('/blur').post( //route
     upload.single('image'), //middleware- multer
     
     getBlurImage    //controller
+)
+
+router.route('/compression').post( //router at which compression of the image will take place
+
+    upload.single('image'), //multer as the middleware
+
+    getCompressedImage   //controller that will be implemented.
+)
+
+router.route('/greyScale').post(
+
+    upload.single('image'),
+
+    getGreyScaleImage
+)
+
+router.route('/formatChanger').post(
+
+    upload.single('image'),
+    
+    getImageFormatChanged
 
 )
+
+router.route('/imageComposition').post(
+
+    upload.array('images', 2),
+    
+    getCompositeImages
+
+)
+
 
 export default router;
 //common qs that can arise in one's mind: we are directly exporting the ectire router, and not 

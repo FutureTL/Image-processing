@@ -1,23 +1,26 @@
 import sharp from "sharp";
-//when I to compress any image I will also know the level of comoressio.
+import path from "path";
+//when I to compress any image I will also know the level of compression.
 //3 levels will be given to the user-
 //1. low compression
 //2. medium
 //3. high
 //so as in input to this imageCompression function I will take an input of level
 
-//whatever level is specified by the user, I will take that as a string as pass as my compressionLevel here.
+//whatever level is specified by the user, I will take that as a string and pass as my compressionLevel here.
 //based on that I have defined 3 configuartion either of which will be chosen.
 
 //major improvement needed in this code: WE HAVE TO ADD toFile() and specify where it will be stored 
 //otherwise sharp is lazy and it will not do anything.
 
-const imageCompression = async (originalPath, compressionLevel) => {
+const imageCompression = async (originalImagePath, compressionLevel, imageFilename) => {
 
     try {
         
-        const image =  sharp(originalPath);
+        const image =  sharp(originalImagePath);
         const metadataOfImage =  await image.metadata();
+        const outputPath = path.join('public', 'processed', imageFilename);
+        
         
         const {format}= metadataOfImage;
 
@@ -44,18 +47,19 @@ const imageCompression = async (originalPath, compressionLevel) => {
 
         }
 
+        
+
         //for now I will guess that when user will click on either of the three levels
         //i will collect that as a string.
         if(compressionLevel == "low"){
-                 await image[format](lowCompress[format])
+                 await image[format](lowCompress[format]).toFile(outputPath);
                  
-
         }
         else if(compressionLevel== "medium"){
-                return await image[format](mediumCompress[format]);
+                return await image[format](mediumCompress[format]).toFile("C:/Users/hp/Desktop/rav/lucyBronze.jpeg");
         }
         else{
-                return await image[format](highCompress[format]);
+                return await image[format](highCompress[format]).toFile(outputPath);
         }
 
 

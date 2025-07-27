@@ -1,15 +1,17 @@
 import sharp from "sharp";
+import path from "path";
 
 //we have to think about the input of .toFile
 
-const convertToGrayscale =async (inputImage) => {
+const convertToGrayscale =async (inputImagePath, imageFilename) => {
 
     try {
         
-        const image = sharp(inputImage);
+        const image = sharp(inputImagePath);
+        const outputPath = path.join('public', 'processed', imageFilename);
 
         return await image.grayscale()
-                .toFile(outputImage);
+                .toFile(outputPath);
 
 
     } catch (error) {

@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import path from "path";
 
 //we have to think about the input of .toFile
 
