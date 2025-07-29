@@ -3,7 +3,7 @@
 
 import express from "express";
 import upload from "../middlewares/multer.js";
-import { getBlurImage,getCompressedImage , getGreyScaleImage, getImageFormatChanged, getCompositeImages} from "../controllers/controller.js";
+import { getBlurImage,getCompressedImage , getGreyScaleImage, getImageFormatChanged, getCompositeImages, getTextaddedToImage} from "../controllers/controller.js";
 
 const router = express.Router()
 
@@ -43,6 +43,14 @@ router.route('/imageComposition').post(
     upload.array('images', 2),
     
     getCompositeImages
+
+)
+
+router.route('/addText').post(
+
+    upload.single('image'),
+
+    getTextaddedToImage
 
 )
 

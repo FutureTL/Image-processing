@@ -1,6 +1,7 @@
 import sharp from "sharp";
 import path from "path";
 
+
 //here the user will give some text, in my mind the parameters that should be considered are:
 //- font of the text, height of the text, is it italic, bold, all these will depend on the options I give to the user. So, I'll decide that while writing the code of the frontend 
 //and then come back here and make the changes here.
@@ -18,10 +19,15 @@ import path from "path";
 
 //NOTE: We have to see .toFile()
 
-const addText = async (boxWidth, boxHeight, textInput, textSize, textFont, textRotationAngle, textColor, textBold, textItalic) => {
+const addText = async (imageFilename, boxWidth, boxHeight, textInput, textSize, textFont, textRotationAngle, textColor, textBold, textItalic) => {
 
     try {
+        const ext = path.extname(imageFilename);         // '.png'
+        const nameWithoutExt = path.basename(imageFilename, ext); //rav
+        const newFilename = `textadded${ext}`;
+        //from the file name I have separated the ext and the name. 
 
+        const outputPath = path.join('public', 'processed', newFilename)
         //this way of defining the weight and style of the text is somwthing new I have learnt today and then
         //how it is passed in the style class .title .
         const fontWeight = textBold? 'font-weight: bold;' : '';
@@ -48,7 +54,8 @@ const addText = async (boxWidth, boxHeight, textInput, textSize, textFont, textR
         // we have taken x, y as 50% as default right now, we have to see to it what it should be.
 
         const svgBuffer = Buffer.from(svgImage);
-        const image = await sharp(svgBuffer).toFile('./public/processed');
+        await sharp(svgBuffer).toFile(outputPath);
+        return outputPath;
 
     } catch (error) {
         console.log("Error in adding text to the image: ", error);

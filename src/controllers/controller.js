@@ -7,6 +7,7 @@ import imageCompression from "../imageTransform/compression/imageCompression.js"
 import convertToGrayscale from "../imageTransform/grayScaleConversion/convertToGrayscale.js";
 import changeImageFormat from "../imageTransform/changeFormat/formatChanger.js";
 import compositeImages from "../imageTransform/compositing/compositeImage.js";
+import addText from "../imageTransform/addText/addText.js";
 
 //firstly I was thinking that I will write 1 controller and from it all my image transforms will be handled. 
 //So, i was thinking of using switch cases.
@@ -47,7 +48,7 @@ const getBlurImage = asyncHandler( async(req, res, next) => {
         new ApiResponse(201, outputBlurImage, `image blurred to ${blurLevel} successfully`)
     );
 
-})
+}) //completed
 
 const getCompressedImage = asyncHandler( async(req,res,next) => {
 
@@ -81,7 +82,7 @@ const getCompressedImage = asyncHandler( async(req,res,next) => {
     )
 
 
-})
+})//completed
 
 const getGreyScaleImage = asyncHandler( async(req, res, next) => {
 
@@ -101,7 +102,7 @@ const getGreyScaleImage = asyncHandler( async(req, res, next) => {
     .json(
         new ApiResponse(201, imageToGreyScale, "image converted to greyScale successfully!")
     )
-})
+})//completed
 
 const getImageFormatChanged = asyncHandler( async(req, res, next) => {
 
@@ -181,13 +182,64 @@ const getCompositeImages = asyncHandler( async(req, res, next ) => {
 
 
 
-})
+})//completed
 
 
+//now we will write a controller to add text to an image. It is going to have a number of values.
+const getTextaddedToImage = asyncHandler( async(req, res, next) => {
+
+    const bottomImagePath = req.file?.path;
+    if(!bottomImagePath){
+        throw new ApiError(409, "please provide input image.");
+    }
+    //boxWidth, boxHeight, textInput, textSize, 
+    //textFont, textRotationAngle, textColor, textBold, textItalic
+
+    const { boxWidth, boxHeight, textInput, textSize, textFont,
+        textRotationAngle, textColor, textBold, textItalic } =  req.body;
+
+    if(!boxWidth || !boxHeight || !textInput || !textSize || !textFont || !textRotationAngle || !textColor || !textBold || !textItalic){
+        throw new ApiError(404, "enter all the values.");
+    }
+
+
+
+    const imageFilename = imageFilenameExtracted(bottomImagePath);
+    console.log(`filename of the bottom image extracted: ${imageFilename}`);
+
+    const createTextImage = await addText(imageFilename,boxWidth, boxHeight, textInput, textSize, textFont, textRotationAngle, textColor, textBold, textItalic);
+    //the boxheight and width are for the box(invisible) that engulfs the text.
+
+    console.log(`text image to be composited to bottom image is: ${createTextImage}`);
+
+    const addTextToImageComposite = compositeImages(bottomImagePath, createTextImage, 300, 300, imageFilename);
+    //the left and top here makes the text move from the top left corner,as we increase the value, dist from top and left increases.
+    if(!addTextToImageComposite){
+        throw new ApiError(404, "text could not be added to bottom image");
+    }
+    console.log(`text has been added to image: ${addTextToImageComposite}`);
+
+
+
+    return res.status(200)
+    .json(
+        new ApiResponse(200, addTextToImageComposite, "text added to image successfully!")
+    )
+
+
+})//I am facing an issue- I am able to sucessfully create a text image, the problem is that addText.js returns an object promise,
+//but we need the path of the image that we have just created, so that we can pass it with the another image to achieve image composition.
+//that is not being possible right now.
+//Solution- I had to add await before that function because it is returing a promise so we have to await its result.
+
+//Very Interesting observation: when adding text to a jpeg image, i am getting black background with the text. 
+//              but adding text to a png image, comes with background less text, so proper text is being added. 
+//              we need to investigate why it is happening with jpeg?
 export {
     getBlurImage,
     getCompressedImage,
     getGreyScaleImage,
     getImageFormatChanged,
-    getCompositeImages
+    getCompositeImages,
+    getTextaddedToImage
 }
