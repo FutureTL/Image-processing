@@ -8,6 +8,9 @@ import convertToGrayscale from "../imageTransform/grayScaleConversion/convertToG
 import changeImageFormat from "../imageTransform/changeFormat/formatChanger.js";
 import compositeImages from "../imageTransform/compositing/compositeImage.js";
 import addText from "../imageTransform/addText/addText.js";
+import cropImage from "../imageTransform/crop/imageCrop.js";
+import resizeImage from "../imageTransform/resize/resizeImages.js";
+import rotateImage from "../imageTransform/rotation/rotateImage.js";
 
 //firstly I was thinking that I will write 1 controller and from it all my image transforms will be handled. 
 //So, i was thinking of using switch cases.
@@ -235,11 +238,146 @@ const getTextaddedToImage = asyncHandler( async(req, res, next) => {
 //Very Interesting observation: when adding text to a jpeg image, i am getting black background with the text. 
 //              but adding text to a png image, comes with background less text, so proper text is being added. 
 //              we need to investigate why it is happening with jpeg?
+
+
+
+const getCroppedImage = asyncHandler(async( req, res, next)=>{
+
+    const inputImagePath =  req.file?.path;
+    if(!inputImagePath){
+        throw new ApiError(409, "please provide the image to be cropped.")
+    }
+
+    const imageFilename = imageFilenameExtracted(inputImagePath);
+    if(!imageFilename){
+        throw new ApiError(404, "image filename not extracted.")
+    }
+    console.log(`the image filename is: ${imageFilename}`);
+
+
+
+    const { left, top, width, height } = req.body;
+    if(!left || !top || !width || !height){
+        throw new ApiError(404, "please provide all the values")
+    }
+
+
+    const croppedImage = await cropImage(inputImagePath, imageFilename, Number(left), Number(top), Number(width), Number(height));
+    if(!croppedImage){
+        throw new ApiError(409, "image could not be cropped!");
+    }
+
+    console.log(`the cropped image is: ${croppedImage}`);
+
+    return res.status(200)
+    .json(
+        new ApiResponse(200, croppedImage, "image is cropped successfully.")
+    )
+
+})//very interesting observation: when I was calling the function to crop the image i.e, when we call
+//const croppedImage = await cropImage(inputImagePath, imageFilename, ..); this line, I was not writing await because of 
+//that I was getting a promise object, and we couldn't read it beacuse we had not awaited it. 
+//so writing await helped me learn what data is being recieved.
+
+
+
+const getResizedImage = asyncHandler( async( req, res, next ) => {
+
+        const inputImagePath = req.file?.path;
+
+        if(!inputImagePath){
+            throw new ApiError(409, "please provide input image");
+        }
+        console.log(`path of the input image is: ${inputImagePath}`);
+
+
+
+        const { width , height } = req.body;
+        if(!width || !height){
+            throw new ApiError(404, "please enter both width and height.")
+        }
+        
+
+        const imageFilename =  imageFilenameExtracted(inputImagePath);
+        if(!imageFilename){
+            throw new ApiError(404, "image filename could not be extracted")
+        }
+        console.log(`filename of the image: ${imageFilename}`);
+
+
+
+        const resizedImage = await resizeImage(inputImagePath, imageFilename, Number(width), Number(height));
+
+        if(!resizedImage){
+            throw new ApiError(404, "image cannot be resized.")
+        }
+        console.log(`resized image is: ${resizedImage}`);
+        
+
+
+        return res.status(200)
+        .json(
+            new ApiResponse(200, resizedImage, "image is resized successfully!")
+        )
+
+}) //Mistake: I was getting the output image in the processed folder. but i was getting an error that image is not resized from here-
+//const resizedImage = await resizeImage(inputImagePath, imageFilename, Number(width), Number(height));
+
+        // if(!resizedImage){
+        //     throw new ApiError(404, "image cannot be resized.")
+        // }
+// solution: in resizeImages.js, I was not returning. I had not written return that is why image was getting saved in the processed folder,
+// but error was being thrown, as nothing was being returned. 
+
+
+const getRotatedImage = asyncHandler( async(req, res, next) => {
+
+    const inputImagePath = req.file?.path;
+    if(!inputImagePath){
+        throw new ApiError(404, "please provide input image.");
+    }
+    console.log(`path of the input image: ${inputImagePath}`);
+
+    const { rotateAngle } = req.body;
+    if(!rotateAngle){
+        throw new ApiError(409, "please provide angle for rotation");
+    }
+    console.log(`rotation angle is : ${rotateAngle}`);
+
+
+    const imageFilename = imageFilenameExtracted(inputImagePath);
+    if(!imageFilename){
+        throw new ApiError(404, "filename of the image couldn't be extracted");
+    }
+
+    console.log(`filename of the image: ${imageFilename}`);
+
+
+    const rotatedImage = await rotateImage(inputImagePath, imageFilename, Number(rotateAngle));
+    if(!rotatedImage){
+        throw new ApiError(404, "image could not be rotated.")
+    }
+    console.log(`rotated image: ${rotatedImage}`);
+
+
+    return res.status(200)
+    .json(
+        new ApiResponse(200, rotatedImage, "image rotated successfully!")
+    )
+
+
+})//mistake: I was not destructing rotateAngle while extracting it from req.body
+//always write within { }.
+//2nd mistake: angle was expected to be a numeric value, but from req.body we receive a string, then we have to write it within Number(rotateAngle);
+
 export {
     getBlurImage,
     getCompressedImage,
     getGreyScaleImage,
     getImageFormatChanged,
     getCompositeImages,
-    getTextaddedToImage
+    getTextaddedToImage,
+    getCroppedImage,
+    getResizedImage,
+    getRotatedImage
 }

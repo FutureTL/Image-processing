@@ -4,39 +4,29 @@
 //will get this data from the frontend and our control logic.
 
 import sharp from "sharp";
+import path from "path";
 
 
-// const resizeImage = async (imageLocation, widthByUser, heightByUser) => {
+const resizeImage = async (inputImagePath,imageFilename, widthByUser, heightByUser) => {
 
-//     try {
-//         await sharp(imageLocation)
-//             .resize(
-//                 {
-//                     width: widthByUser,
-//                     height: heightByUser
-//                 }
-//             )
-//             .toFile(`${imageLocation}-resized`)
-//     } catch (error) {
-//         console.log(`error occured in resizing the image: `, error);
-//     }
+    try {
 
-// }
+        const outputPath = path.join('public', 'processed', imageFilename);
+        const image = sharp(inputImagePath);
+        return await image.resize(
+                {
+                    width: widthByUser,
+                    height: heightByUser
+                }
+            )
+            .toFile(outputPath)
 
-// export default resizeImage;
+    } catch (error) {
+        console.log(`error occured in resizing the image: `, error);
+    }
 
-
-async function resizeImage() {
-  try {
-    await sharp("C:\Users\hp\Desktop\image process project\public\temp\sammy.jpg")
-      .resize({
-        width: 150,
-        height: 97
-      })
-      .toFile("sammy-resized.jpg");
-  } catch (error) {
-    console.log(error);
-  }
 }
 
-resizeImage();
+export default resizeImage;
+
+

@@ -3,7 +3,7 @@
 
 import express from "express";
 import upload from "../middlewares/multer.js";
-import { getBlurImage,getCompressedImage , getGreyScaleImage, getImageFormatChanged, getCompositeImages, getTextaddedToImage} from "../controllers/controller.js";
+import { getBlurImage,getCompressedImage , getGreyScaleImage, getImageFormatChanged, getCompositeImages, getTextaddedToImage, getCroppedImage, getResizedImage, getRotatedImage } from "../controllers/controller.js";
 
 const router = express.Router()
 
@@ -54,6 +54,28 @@ router.route('/addText').post(
 
 )
 
+router.route('/cropImage').post(
+
+    upload.single('image'),
+
+    getCroppedImage
+
+)
+
+router.route('/resizeImage').post(
+
+    upload.single('image'),
+
+    getResizedImage
+)
+
+router.route('/rotateImage').post(
+
+    upload.single('image'),
+
+    getRotatedImage
+
+)
 
 export default router;
 //common qs that can arise in one's mind: we are directly exporting the ectire router, and not 

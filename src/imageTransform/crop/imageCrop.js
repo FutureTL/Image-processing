@@ -3,10 +3,12 @@ import path from "path";
 
 //we have to think about the input of .toFile
 
-const cropImage =async (inputImage,left, top, width , height) => {
+const cropImage =async (inputImage,imageFilename, left, top, width , height) => {
 
     try {
         
+        const outputImage = path.join('public', 'processed', imageFilename);
+
         const image = sharp(inputImage);
 
         return await image.extract({left, top, width, height})
